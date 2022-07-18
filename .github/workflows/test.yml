@@ -1,19 +1,6 @@
 on:
   workflow_dispatch:
     inputs:
-      logLevel:
-        description: 'Log level'
-        required: true
-        default: 'warning'
-        type: choice
-        options:
-          - info
-          - warning
-          - debug
-      tags:
-        description: 'Test scenario tags'
-        required: false
-        type: boolean
       environment:
         required: true
         default: 'infra-test'
@@ -24,8 +11,8 @@ on:
         type: choice
         options:
           - infra-test
-          - dev
-          - prod
+          # - dev
+          # - prod
       action:
         required: true
         default: 'start'
@@ -35,33 +22,34 @@ on:
         options:
           - start
           - stop
-env:
-  deployment_env: ${{github.event.inputs.environment || 'infra-test'}}
+
 jobs:
-  # Check env
-  check-env:
-    if: env.deployment_env == 'infra-test'
-    runs-on: ubuntu-latest
-    steps:
-      - name: print environment
-        run: |
-          echo "Test environment"
-  start-service:
-    needs: check-env
-    if: env.deployment_env == 'infra-test'
+  service-in-test:
+    if: ${{github.event.inputs.environment}} == 'infra-test'
     runs-on: ubuntu-latest
     steps:
       - name: 'start-service'
-        if: github.event.inputs.action == 'start-service'
+        if: ${{github.event.inputs.action}} == 'start'
         run: |
           echo "aws ecs start-task --task-definition massgov-pfml-${{ github.event.inputs.taskdefinition }} --cluster massgov-pfml-${{ github.event.inputs.cluster }}"
           echo "aws rds start-db-instance --db-instance-identifier massgov-pfml-${{ github.event.inputs.environment }}"
-  stop-service:
-    if: env.deployment_env == 'infra-test'
+      - name: 'stop-service'
+        if: ${{github.event.inputs.action}} == 'stop'
+        run: |
+          echo "aws ecs stop-task --task-definition massgov-pfml-${{ github.event.inputs.taskdefinition }} --cluster massgov-pfml-${{ github.event.inputs.cluster }}"
+          echo "aws rds stop-db-instance --db-instance-identifier massgov-pfml-${{ github.event.inputs.environment }}"
+
+  service-in-prod:
+    if: ${{github.event.inputs.environment}} == 'prod'
     runs-on: ubuntu-latest
     steps:
-      - name: 'stop service'
-        if: github.event.inputs.action == 'stop-service'
+      - name: 'start-service'
+        if: ${{github.event.inputs.action}} == 'start-service'
+        run: |
+          echo "aws ecs start-task --task-definition massgov-pfml-${{ github.event.inputs.taskdefinition }} --cluster massgov-pfml-${{ github.event.inputs.cluster }}"
+          echo "aws rds start-db-instance --db-instance-identifier massgov-pfml-${{ github.event.inputs.environment }}"
+      - name: 'stop-service'
+        if: ${{github.event.inputs.action}} == 'stop-service'
         run: |
           echo "aws ecs stop-task --task-definition massgov-pfml-${{ github.event.inputs.taskdefinition }} --cluster massgov-pfml-${{ github.event.inputs.cluster }}"
           echo "aws rds stop-db-instance --db-instance-identifier massgov-pfml-${{ github.event.inputs.environment }}"
