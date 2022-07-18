@@ -32,11 +32,13 @@ on:
           - start-service
           - stop-service
 jobs:
-  # deploy:
-  #   name: Deploy
-  #   runs-on: ubuntu-latest
-  #   env:
-  #     releaseVersion: ${{ github.event.inputs.action }}
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    env:
+      releaseVersion: ${{ github.event.inputs.action }}
+    steps:
+      - run: echo ${{env.releaseVersion}}
   start-service:
     if: github.event.inputs.action == 'start-service'
     runs-on: ubuntu-latest
