@@ -37,26 +37,26 @@ jobs:
   #   runs-on: ubuntu-latest
   #   env:
   #     releaseVersion: ${{ github.event.inputs.action }}
-  # start-service:
-  #   if: github.event.inputs.action == 'start-service'
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: 'start-service'
-  #       run: |
-  #         echo "aws ecs start-task --task-definition massgov-pfml-${{ github.event.inputs.taskdefinition }} --cluster massgov-pfml-${{ github.event.inputs.cluster }}"
-  #     - name: 'start-rds'
-  #       run: |
-  #         echo "aws rds start-db-instance --db-instance-identifier massgov-pfml-${{ github.event.inputs.environment }}"
-  # stop-service:
-  #   if: github.event.inputs.action == 'stop-service'
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: 'stop service'
-  #       run: |
-  #         echo "aws ecs stop-task --task-definition massgov-pfml-${{ github.event.inputs.taskdefinition }} --cluster massgov-pfml-${{ github.event.inputs.cluster }}"
-  #     - name: 'stop rds'
-  #       run: |
-  #         echo "aws rds stop-db-instance --db-instance-identifier massgov-pfml-${{ github.event.inputs.environment }}"
+  start-service:
+    if: github.event.inputs.action == 'start-service'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'start-service'
+        run: |
+          echo "aws ecs start-task --task-definition massgov-pfml-${{ github.event.inputs.taskdefinition }} --cluster massgov-pfml-${{ github.event.inputs.cluster }}"
+      - name: 'start-rds'
+        run: |
+          echo "aws rds start-db-instance --db-instance-identifier massgov-pfml-${{ github.event.inputs.environment }}"
+  stop-service:
+    if: github.event.inputs.action == 'stop-service'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'stop service'
+        run: |
+          echo "aws ecs stop-task --task-definition massgov-pfml-${{ github.event.inputs.taskdefinition }} --cluster massgov-pfml-${{ github.event.inputs.cluster }}"
+      - name: 'stop rds'
+        run: |
+          echo "aws rds stop-db-instance --db-instance-identifier massgov-pfml-${{ github.event.inputs.environment }}"
   log-the-inputs:
     runs-on: ubuntu-latest
     steps:
