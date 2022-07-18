@@ -25,31 +25,47 @@ on:
 
 jobs:
   service-in-test:
-    if: ${{github.event.inputs.environment}} == 'infra-test'
+    if: github.event.inputs.environment == 'infra-test'
     runs-on: ubuntu-latest
     steps:
       - name: 'start-service'
         if: github.event.inputs.action == 'start'
         run: |
-          echo "aws ecs start-task --task-definition massgov-pfml-${{ github.event.inputs.taskdefinition }} --cluster massgov-pfml-${{ github.event.inputs.cluster }}"
-          echo "aws rds start-db-instance --db-instance-identifier massgov-pfml-${{ github.event.inputs.environment }}"
+          export current_day=$(date +%A) # check today's day
+          export current_time=$(date +%s)# check today's time
+          # Check that $current_day is in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+          # Check that $current_time is between 0:00 and 23:39
+            echo "Start service ONLY when it is Monday-Friday, 0 - 24"
+            echo "Scale service to 2"
       - name: 'stop-service'
         if: github.event.inputs.action == 'stop'
         run: |
-          echo "aws ecs stop-task --task-definition massgov-pfml-${{ github.event.inputs.taskdefinition }} --cluster massgov-pfml-${{ github.event.inputs.cluster }}"
-          echo "aws rds stop-db-instance --db-instance-identifier massgov-pfml-${{ github.event.inputs.environment }}"
+          export current_day=$(date +%A) # check today's day
+          export current_time=$(date +%s)# check today's time
+          # Check that $current_day is in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+          # Check that $current_time is between 0:00 and 23:59
+            echo "Start service ONLY when it is Monday-Friday, 0 - 24"
+            echo "Scale service to 0"
 
-  service-in-prod:
-    if: github.event.inputs.environment == 'prod'
+  service-in-dev:
+    if: github.event.inputs.environment == 'dev'
     runs-on: ubuntu-latest
     steps:
       - name: 'start-service'
         if: github.event.inputs.action == 'start-service'
         run: |
-          echo "aws ecs start-task --task-definition massgov-pfml-${{ github.event.inputs.taskdefinition }} --cluster massgov-pfml-${{ github.event.inputs.cluster }}"
-          echo "aws rds start-db-instance --db-instance-identifier massgov-pfml-${{ github.event.inputs.environment }}"
+          export current_day=$(date +%A) # check today's day
+          export current_time=$(date +%s)# check today's time
+          # Check that $current_day is in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+          # Check that $current_time is between 7:00 and 19:00
+            echo "Start service ONLY when it is Monday-Friday, 7 - 19 $current_day"
+            echo "Scale service to 2 $current_time"
       - name: 'stop-service'
         if: github.event.inputs.action == 'stop-service'
         run: |
-          echo "aws ecs stop-task --task-definition massgov-pfml-${{ github.event.inputs.taskdefinition }} --cluster massgov-pfml-${{ github.event.inputs.cluster }}"
-          echo "aws rds stop-db-instance --db-instance-identifier massgov-pfml-${{ github.event.inputs.environment }}"
+          export current_day=$(date +%A) # check today's day
+          export current_time=$(date +%s)# check today's time
+          # Check that $current_day is in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+          # Check that $current_time is between 7:00 and 19:00
+            echo "stop service ONLY when it is Monday-Friday, 7 - 19"
+            echo "Scale service to 0"
