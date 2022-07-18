@@ -29,27 +29,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 'start-service'
-        if: ${{github.event.inputs.action}} == 'start'
+        if: github.event.inputs.action == 'start'
         run: |
           echo "aws ecs start-task --task-definition massgov-pfml-${{ github.event.inputs.taskdefinition }} --cluster massgov-pfml-${{ github.event.inputs.cluster }}"
           echo "aws rds start-db-instance --db-instance-identifier massgov-pfml-${{ github.event.inputs.environment }}"
       - name: 'stop-service'
-        if: ${{github.event.inputs.action}} == 'stop'
+        if: github.event.inputs.action == 'stop'
         run: |
           echo "aws ecs stop-task --task-definition massgov-pfml-${{ github.event.inputs.taskdefinition }} --cluster massgov-pfml-${{ github.event.inputs.cluster }}"
           echo "aws rds stop-db-instance --db-instance-identifier massgov-pfml-${{ github.event.inputs.environment }}"
 
   service-in-prod:
-    if: ${{github.event.inputs.environment}} == 'prod'
+    if: github.event.inputs.environment == 'prod'
     runs-on: ubuntu-latest
     steps:
       - name: 'start-service'
-        if: ${{github.event.inputs.action}} == 'start-service'
+        if: github.event.inputs.action == 'start-service'
         run: |
           echo "aws ecs start-task --task-definition massgov-pfml-${{ github.event.inputs.taskdefinition }} --cluster massgov-pfml-${{ github.event.inputs.cluster }}"
           echo "aws rds start-db-instance --db-instance-identifier massgov-pfml-${{ github.event.inputs.environment }}"
       - name: 'stop-service'
-        if: ${{github.event.inputs.action}} == 'stop-service'
+        if: github.event.inputs.action == 'stop-service'
         run: |
           echo "aws ecs stop-task --task-definition massgov-pfml-${{ github.event.inputs.taskdefinition }} --cluster massgov-pfml-${{ github.event.inputs.cluster }}"
           echo "aws rds stop-db-instance --db-instance-identifier massgov-pfml-${{ github.event.inputs.environment }}"
