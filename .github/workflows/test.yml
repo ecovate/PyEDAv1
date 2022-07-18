@@ -34,14 +34,13 @@ jobs:
           current_day=`date +%A` && echo $current_date # check today's day
           current_time=`date +%H` && echo $current_time # check today's time
           weekdays="Monday Tuesday Wednesday Thursday Friday"
+          echo `$current_day and $current_time`
           if (echo $weekdays | grep -w $current_day) && ($current_time -gt 0) && ($current_time -lt 24); then
             echo `Start service ONLY when it is Monday-Friday, 0 - 24 $current_day`
             echo "Scale service to 2 $current_time"
           else
             echo `Not running task`
           fi
-          # Check that $current_day is in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
-          # Check that $current_time is between 0:00 and 23:39
 
       - name: 'stop-service'
         if: github.event.inputs.action == 'stop'
