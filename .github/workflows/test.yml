@@ -34,9 +34,9 @@ jobs:
           current_day=`date +%A` && echo $current_date # check today's day
           current_time=`date +%H` && echo $current_time # check today's time
           weekdays="Monday Tuesday Wednesday Thursday Friday"
-          echo $current_day and $current_time
+          echo Today is $current_day and it is the ${current_time}-th hour
           if echo $weekdays | grep -w $current_day > /dev/null; then
-            echo `Start service ONLY when it is Monday-Friday, 0 - 24 $current_day`;
+            echo "Start service ONLY when it is Monday-Friday, 0 - 24 $current_day";
             echo "Scale service to 2 $current_time";
           else
             echo "not";
