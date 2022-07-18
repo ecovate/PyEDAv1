@@ -35,8 +35,8 @@ jobs:
           export current_time=$(date +%s)# check today's time
           # Check that $current_day is in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
           # Check that $current_time is between 0:00 and 23:39
-            echo "Start service ONLY when it is Monday-Friday, 0 - 24"
-            echo "Scale service to 2"
+            echo "Start service ONLY when it is Monday-Friday, 0 - 24 $current_day"
+            echo "Scale service to 2 $current_time"
       - name: 'stop-service'
         if: github.event.inputs.action == 'stop'
         run: |
