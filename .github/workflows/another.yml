@@ -40,13 +40,13 @@ jobs:
     steps:
       - name: Dev Enviroments
         if: github.event.schedule != '0 7-19 * * 1-5'
-        run: echo "This step will be run on Monday through Friday at 7am to 7pm "
+        run: echo "This step will be run on Monday through Friday at 7am to 7pm"
       - name: UAT Enviroments
         if: github.event.schedule != '0 0 * * 1-5'
-        run: echo "This step will be run on Monday through Friday at 24x5
+        run: echo "This step will be run on Monday through Friday at 24x5"
       - name: Prod Enviroments
         if: github.event.schedule != '0 0 * * 1-7'
-        run: echo "This step will be run 24x7
+        run: echo "This step will be run 24x7"
   start-service:
     if: github.event.inputs.action == 'start-service'
     runs-on: ubuntu-latest
